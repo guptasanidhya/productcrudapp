@@ -4,16 +4,17 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd
        http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx.xsd
-">
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- Enable annotation-driven transaction management -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!-- Component scanning -->
     <context:component-scan base-package="productcrudapp"/>
@@ -26,9 +27,6 @@
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-
-
-
 
     <!-- DataSource bean -->
     <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="ds">
@@ -50,18 +48,19 @@
         </property>
         <property name="annotatedClasses">
             <list>
-        <value>productcrudapp.model.Product</value>
+                <value>productcrudapp.model.Product</value>
             </list>
         </property>
     </bean>
 
-    <!-- DAO class - Injecting SessionFactory directly into Dao -->
-<!--    <bean class="productcrudapp.dao.ProductDao" id="productDao">-->
-<!--        <property name="sessionFactory" ref="factory"/>-->
-<!--    </bean>-->
+    <!-- DAO class -->
+    <bean class="productcrudapp.dao.ProductDaoImpl" id="productDaoImpl">
+        <property name="sessionFactory" ref="factory"/>
+    </bean>
 
     <!-- TransactionManager for managing Hibernate transactions -->
     <bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" id="transactionManager">
         <property name="sessionFactory" ref="factory"/>
     </bean>
+
 </beans>

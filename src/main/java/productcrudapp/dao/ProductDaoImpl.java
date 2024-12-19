@@ -6,38 +6,63 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import productcrudapp.model.Product;
 
 import java.util.List;
 
-@Component("productDao")
+@Repository
 public class ProductDaoImpl implements  ProductDao{
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    @Override
-
-
-    //create
-    @Transactional
-    public void createProduct(Product product) {
-
-        Session session = sessionFactory.getCurrentSession();
-        session.persist(product);
-        session.flush(); //flush the session so that user get save instantly othewise until session is closed it will not be saved
-        System.out.println("Product has been added successfully");
+    public ProductDaoImpl() {
     }
 
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    //create
+    @Override
     @Transactional
+    public int createProduct(Product product) {
+
+        Session session = sessionFactory.getCurrentSession();
+        if (session != null && session.isOpen()) {
+            System.out.println("Session is open: " + session);
+            if (product.getId() == 0) {
+                session.persist(product);
+                System.out.println("Product added successfully: " + product.getId());
+                session.flush();
+            } else {
+                System.out.println("using deprecated method");
+                session.saveOrUpdate(product);
+                System.out.println("Product updated or added successfully: " + product.getId());
+            }
+        } else {
+            System.out.println("Session is not open");
+        }
+        return product.getId();
+    }
+
+
+
+    @Transactional
+    @Override
     public List<Product> getProducts()
     {
         Session session = sessionFactory.getCurrentSession();
-        List<Product> products = session.createQuery("from Product", Product.class).getResultList();
-        return products;
+        return session.createQuery("from Product", Product.class).getResultList();
     }
 
     @Transactional
+    @Override
     public Product getProduct(int  productId){
         Session session = sessionFactory.getCurrentSession();
         return session.get(Product.class,productId);
@@ -47,6 +72,7 @@ public class ProductDaoImpl implements  ProductDao{
 
 
     @Transactional
+    @Override
     public void deleteProduct(int productId){
         Session session = sessionFactory.getCurrentSession();
         Product product = session.get(Product.class,productId);
