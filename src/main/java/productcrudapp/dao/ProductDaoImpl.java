@@ -42,7 +42,7 @@ public class ProductDaoImpl implements  ProductDao{
                 session.flush();
             } else {
                 System.out.println("using deprecated method");
-                session.saveOrUpdate(product);
+                session.merge(product);
                 System.out.println("Product updated or added successfully: " + product.getId());
             }
         } else {

@@ -31,4 +31,9 @@ public class ProductService {
     public void deleteProduct(int productId){
         this.productDao.deleteProduct(productId);
     }
+
+    public Product getProduct(int productId){
+        System.out.println("Get product");
+        return this.productDao.getProduct(productId);
+    }
 }

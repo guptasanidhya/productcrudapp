@@ -32,7 +32,8 @@
     <td>${p.description}</td>
     <td class = "font-weight-bold">&#x20B9; ${p.price}</td>
     <td>
-    <a href="delete/${p.id}"><i class="fa-solid fa-trash text-danger">delete</i></a>
+    <a href="delete/${p.id}"><i class="fas fa-trash text-danger">delete</i></a>
+    <a href="update/${p.id}"><i class="fas fa-pen-nib text-primary">update</i></a>
     </td>
     </tr>
     </c:forEach>
