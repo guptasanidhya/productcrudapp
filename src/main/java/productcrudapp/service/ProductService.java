@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import productcrudapp.dao.ProductDao;
 import productcrudapp.model.Product;
 
+import java.util.List;
+
 @Service
 public class ProductService {
 
@@ -18,5 +20,15 @@ public class ProductService {
     {
         System.out.println("I am inside service");
         return this.productDao.createProduct(product);
+    }
+
+
+    public List<Product> displayAllProduct(){
+        System.out.println("displaying All product");
+        return this.productDao.getProducts();
+    }
+
+    public void deleteProduct(int productId){
+        this.productDao.deleteProduct(productId);
     }
 }
